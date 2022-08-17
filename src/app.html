@@ -163,7 +163,11 @@
 
       </main>
 
-      <sidebar v-if="showSidebar" toggle=toggleSidebar />
+      <sidebar 
+        v-if="showSidebar" 
+        :toggle="toggleSidebar"
+        :cart="cart"
+      />
 
       <footer>
       </footer>
@@ -199,7 +203,7 @@
       })
       
       app.component('sidebar', {
-        prop: ['toggle'],
+        props: ['toggle', 'cart'],
         template: `
         <aside class="cart-container">
         <div class="cart">
@@ -228,7 +232,7 @@
                   <td><i class="icofont-carrot icofont-3x"></i></td>
                   <td>Carrot</td>
                   <td>$1.00</td>
-                  <td class="center">1</td>
+                  <td class="center"> {{ cart.carrots }}</td>
                   <td>$1.00</td>
                   <td class="center">
                     <button class="btn btn-light cart-remove">
