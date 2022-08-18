@@ -93,6 +93,7 @@
         :toggle="toggleSidebar"
         :cart="cart"
         :inventory="inventory"
+        :removeItem="removeItem"
       />
 
       <footer>
@@ -129,10 +130,7 @@
       })
       
       app.component('sidebar', {
-        props: ['toggle', 'cart', 'inventory'],
-        computed: {
-          
-        },
+        props: ['toggle', 'cart', 'inventory', 'removeItem' ],
         methods: {
           getPrice(name) {
             const product = this.inventory.find((p) => {
@@ -145,6 +143,9 @@
               return acc + (curr[1] * this.getPrice(curr[0]))
             }, 0)
             return total.toFixed(2)
+          },
+          removeItem(name) {
+            delete this.cart[name]
           }
         },
         template: `
@@ -178,14 +179,13 @@
                   <td class="center"> {{ quantity }}</td>
                   <td> \${{ quantity * getPrice(key).toFixed(2) }}</td>
                   <td class="center">
-                    <button class="btn btn-light cart-remove">
+                    <button @click="removeItem(key)" class="btn btn-light cart-remove">
                       &times;
                     </button>
                   </td>
                 </tr>
               </tbody>
             </table>
-
             <p class="center" v-if="!Object.keys(cart).length"><em>No items in cart</em></p>
             <div class="spread">
               <span><strong>Total:</strong>\${{ calculateTotal() }}</span>
