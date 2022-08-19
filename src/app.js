@@ -1,58 +1,58 @@
 let app = Vue.createApp({
-    data() {
-        return {
-            showSidebar: false,
-            inventory: [],
-            cart: {},
-        }
-    },
-    computed: {
-        totalQuantity() {
-            return Object.values(this.cart).reduce((acc, curr) => {
-                return acc + curr
-            }, 0)
-        }
-    },
-    methods: {
-        addToCart(name, index) {
-            if (!this.cart[name]) this.cart[name] = 0
-            console.log('added to cart!')
-            console.log(name, index)
-            this.cart[name] += this.inventory[index].quantity
-            this.inventory[index].quantity = 0
-
-        },
-        toggleSidebar() {
-            this.showSidebar = !this.showSidebar
-        }
-    },
-    async mounted() {
-        const res = await fetch('./food.json')
-        const data = await res.json()
-        this.inventory = data
+  data() {
+    return {
+      showSidebar: false,
+      inventory: [],
+      cart: {},
     }
+  },
+  computed: {
+    totalQuantity() {
+      return Object.values(this.cart).reduce((acc, curr) => {
+        return acc + curr
+      }, 0)
+    }
+  },
+  methods: {
+    addToCart(name, index) {
+      if (!this.cart[name]) this.cart[name] = 0
+      console.log('added to cart!')
+      console.log(name, index)
+      this.cart[name] += this.inventory[index].quantity
+      this.inventory[index].quantity = 0
+
+    },
+    toggleSidebar() {
+      this.showSidebar = !this.showSidebar
+    }
+  },
+  async mounted() {
+    const res = await fetch('./food.json')
+    const data = await res.json()
+    this.inventory = data
+  }
 })
 
 app.component('sidebar', {
-    props: ['toggle', 'cart', 'inventory', 'remove'],
-    methods: {
-        getPrice(name) {
-            const product = this.inventory.find((p) => {
-                return p.name === name
-            })
-            return product.price.USD
-        },
-        calculateTotal() {
-            const total = Object.entries(this.cart).reduce((acc, curr, index) => {
-                return acc + (curr[1] * this.getPrice(curr[0]))
-            }, 0)
-            return total.toFixed(2)
-        },
-        removeItem(name) {
-            delete this.cart[name]
-        }
+  props: ['toggle', 'cart', 'inventory', 'remove'],
+  methods: {
+    getPrice(name) {
+      const product = this.inventory.find((p) => {
+        return p.name === name
+      })
+      return product.price.USD
     },
-    template: `
+    calculateTotal() {
+      const total = Object.entries(this.cart).reduce((acc, curr, index) => {
+        return acc + (curr[1] * this.getPrice(curr[0]))
+      }, 0)
+      return total.toFixed(2)
+    },
+    removeItem(name) {
+      delete this.cart[name]
+    }
+  },
+  template: `
     <aside class="cart-container">
     <div class="cart">
       <h1 class="cart-title spread">
@@ -77,7 +77,7 @@ app.component('sidebar', {
           </thead>
           <tbody>
             <tr v-for="(quantity, key, i) in cart" :key="i">
-              <td><i class="icofont-carrot icofont-3x"></i></td>
+              <td><i class="icofont-{{i}} icofont-3x"></i></td>
               <td>{{key}}</td>
               <td>\${{getPrice(key).toFixed(2)}}</td>
               <td class="center"> {{ quantity }}</td>
